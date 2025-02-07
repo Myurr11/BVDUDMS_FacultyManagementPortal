@@ -1,0 +1,29 @@
+    rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Users collection: allows authenticated users to create and read their own data
+    match /users/{userId} {
+      allow create: if request.auth != null;
+      allow read: if request.auth != null;
+      allow update, delete: if request.auth != null && request.auth.uid == userId; // User can update their own data
+    }
+
+    // Complaints collection: allows authenticated users to create and read complaints
+    match /complaints/{complaintId} {
+      allow create, read, update: if request.auth != null;
+    }
+
+    // Suggestions collection: allows authenticated users to create and read suggestions
+    match /suggestions/{suggestionId} {
+      allow create, read: if request.auth != null; // Authenticated users can create and read suggestions
+      allow update: if request.auth != null && request.auth.uid == resource.data.userId; // Users can update their own suggestions
+    }
+
+    // Rules for the 'authorizedAdmins' collection
+    match /authorizedAdmins/{email} {
+      allow read: if request.auth != null;  // Allow any authenticated user to read
+      allow write: if request.auth != null && request.auth.token.email == email;  // Only allow the specified email to write
+    }
+  }
+}

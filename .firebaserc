@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "college-complaint-suggestion"
-  }
+    "default": "faculty-task-management",
+    "faculty-task-management": "faculty-task-management"
+  },
+  "targets": {},
+  "etags": {}
 }
